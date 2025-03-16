@@ -13,13 +13,16 @@ public class KaspiPayment implements PaymentType{
         this.balance = balance;
     }
 
+    public KaspiPayment() {
+    }
+
     @Override
     public void Payment(double amount) {
         if (balance < amount) {
             System.out.println("Insufficient funds on credit card");
         }
         else {balance -= amount;
-            System.out.println("Processing credit card payment of sum: "+amount);
+            System.out.println("Processing credit card payment of $: "+amount);
         }
     }
 }

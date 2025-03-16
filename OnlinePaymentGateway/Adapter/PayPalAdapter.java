@@ -1,15 +1,19 @@
-package OnlinePaymentGateway.PaymentTypes;
+package OnlinePaymentGateway.Adapter;
 
-public class PayPalpayment implements PaymentType{
+import OnlinePaymentGateway.Adapter.PayPalValidate;
+import OnlinePaymentGateway.PaymentTypes.PaymentType;
+
+public class PayPalAdapter implements PaymentType {
+    private PayPalValidate validate;
     private String id;
     private double balance;
 
-    public PayPalpayment(String id, double balance) {
+    public PayPalAdapter(String id, double balance) {
         this.id = id;
         this.balance = balance;
+        this.validate = new PayPalValidate();
     }
-
-    public PayPalpayment() {
+    public PayPalAdapter() {
     }
 
     @Override
