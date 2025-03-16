@@ -1,5 +1,8 @@
 package OnlinePaymentGateway.PaymentTypes;
 
+import OnlinePaymentGateway.Exception.InsufficientFundsException;
+import OnlinePaymentGateway.TransactionLogger;
+
 public class CryptoPayment implements PaymentType {
     private String Address;
     double balance;
@@ -14,12 +17,17 @@ public class CryptoPayment implements PaymentType {
 
     @Override
     public void Payment(double amount) {
-        if (balance < amount) {
-            System.out.println("Not enough in Crypto account");
-        }
-        else {
-            balance-=amount;
-            System.out.println("Processing crypto payment of $: "+amount);
+        try {
+            if (balance < amount) {
+                throw new InsufficientFundsException();
+            }
+            else {
+                balance-=amount;
+            }
+            TransactionLogger.log("Crypto payment succeeded: $" + amount);
+        } catch (Exception e) {
+            TransactionLogger.log("Crypto payment failed: " + e.getMessage());
+            throw e;
         }
     }
 }

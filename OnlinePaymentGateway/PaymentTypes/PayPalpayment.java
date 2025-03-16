@@ -1,5 +1,8 @@
 package OnlinePaymentGateway.PaymentTypes;
 
+import OnlinePaymentGateway.Exception.InsufficientFundsException;
+import OnlinePaymentGateway.TransactionLogger;
+
 public class PayPalpayment implements PaymentType{
     private String id;
     private double balance;
@@ -14,12 +17,18 @@ public class PayPalpayment implements PaymentType{
 
     @Override
     public void Payment(double amount) {
-        if (balance < amount) {
-            System.out.println("Not enough in PayPal account");
-        }
-        else {
-            balance-=amount;
-            System.out.println("Processing paypal card payment of $: "+amount);
+        try {
+            if (balance < amount) {
+                throw new InsufficientFundsException();
+            }
+            else {
+                balance-=amount;
+            }
+            TransactionLogger.log("PayPal payment succeeded: $" + amount);
+        } catch (Exception e) {
+            TransactionLogger.log("PayPal payment failed: " + e.getMessage());
+            throw e;
         }
     }
+
 }

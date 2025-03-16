@@ -1,5 +1,8 @@
 package OnlinePaymentGateway.PaymentTypes;
 
+import OnlinePaymentGateway.Exception.InsufficientFundsException;
+import OnlinePaymentGateway.TransactionLogger;
+
 public class KaspiPayment implements PaymentType{
     private String cardNumber;
     private String expiryDate;
@@ -18,11 +21,17 @@ public class KaspiPayment implements PaymentType{
 
     @Override
     public void Payment(double amount) {
-        if (balance < amount) {
-            System.out.println("Insufficient funds on credit card");
-        }
-        else {balance -= amount;
-            System.out.println("Processing credit card payment of $: "+amount);
+        try {
+            if (balance < amount) {
+                throw new InsufficientFundsException();
+            }
+            else {
+                balance-=amount;
+            }
+            TransactionLogger.log("Kaspi card payment succeeded: $" + amount);
+        } catch (Exception e) {
+            TransactionLogger.log("Kaspi card payment failed: " + e.getMessage());
+            throw e;
         }
     }
 }
